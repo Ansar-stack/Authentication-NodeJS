@@ -6,7 +6,7 @@ import { sentToken} from '../utils/sentToken.util.js';
 
 // Register a user
 export const handleRegister = asyncHandler(async (req, res, next)=>{
-  const {name, email, password} = req.body;
+    const {name, email, password} = req.body;
     // Create and save the user
     const user = await User.create({name, email, password});
     // Generate refresh token 
@@ -20,14 +20,13 @@ export const handleRegister = asyncHandler(async (req, res, next)=>{
 });
 
 // Login the user
-export const handleLogin = asyncHandler(async (req, res)=>{
+export const handleLogin = asyncHandler(async (req, res, next)=>{
     const {email, password} = req.body;
-    if(!email || !password)return res.status(400).json({success: false, message: "Email and Password is required."});
     // Check user in DB
     const userFound = await User.findOne({email});
-    if(!userFound)return res.status(400).json({success: false, message: "Invalid email address"});
+    if(!userFound)return next(new ErrorHanlder('Email does not exist', 400));
     const isPasswordMatch = await userFound.comparePassword(password);
-    if(!isPasswordMatch)return res.status(400).json({success: false, message: "Invalid Password"});
+    if(!isPasswordMatch)return next(new ErrorHanlder('Incorrect Password', 400));
       // Generate refresh token 
     const refreshToken = generateRefreshToken(userFound._id);
     // Save refresh token in db
@@ -35,6 +34,6 @@ export const handleLogin = asyncHandler(async (req, res)=>{
     await userFound.save();
     const accessToken = generateAccessToken(userFound._id);
     sentToken('refreshToken', refreshToken, res);
-    res.status(201).json({success: true, accessToken, user: "User logged in successfully"});
+    res.respond(200, "User logged in successfully", {accessToken});
 });
 
