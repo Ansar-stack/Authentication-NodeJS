@@ -1,16 +1,16 @@
 import jwt from 'jsonwebtoken'
-// Access Token 
+// Access Token Helper
 export const generateAccessToken = (payload)=>{
     const token = jwt.sign({userId: payload}, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: '1m'
+        expiresIn: '30m'
     });
     return token;
 }
 
-// Refresh Token
+// Refresh Token Helper
 export const generateRefreshToken = (payload)=>{
     const token = jwt.sign({userId: payload}, process.env.REFRESH_TOKEN_SECERET, {
-        expiresIn: '20d'
+        expiresIn: '30d'
     });
     return token
 }

@@ -6,7 +6,6 @@ import { connectDB } from './src/config/db.config.js';
 
 // Routes Import
 import authRouter from './src/routes/auth.route.js';
-import employeeRouter from './src/routes/employee.routes.js';
 
 
 const app = express();
@@ -18,8 +17,7 @@ app.use(cors({origin: 'http://localhost:5173', credentials: true}));
 app.use(cookieParser());
 
 // Routes
-app.use('/api/v1/auth/', authRouter)
-app.use('/api/v1/employee/', employeeRouter)
+app.use('/api/v1/auth/', authRouter);
 // DB Connection 
 connectDB();
 

@@ -5,19 +5,16 @@ import { sentToken} from '../utils/sentToken.util.js';
 
 // Register a user
 export const handleRegister = asyncHandler(async (req, res)=>{
-    const {name, email, password} = req.body;
-    if(!name || !email || !password)return res.status(400).json({success: false, message: "Missing Credintails"});
+    // Create and save the user
     const user = await User.create({name, email, password});
     // Generate refresh token 
     const refreshToken = generateRefreshToken(user._id);
     // Save refresh token in db
     user.refreshToken = refreshToken;
     await user.save();
-    const accessToken = generateAccessToken(user._id);
-    sentToken('refreshToken', refreshToken, res);
-
+    const accessToken = generateAccessToken(user._id); // Generate access token
+    sentToken('refreshToken', refreshToken, res); // sent refresh token in cookei
     res.status(201).json({success: true, accessToken});
-
 });
 
 // Login the user
