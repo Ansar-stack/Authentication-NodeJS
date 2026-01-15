@@ -3,6 +3,7 @@ import cors from 'cors'
 import cookieParser from 'cookie-parser';
 import {} from 'dotenv/config';
 import { connectDB } from './src/config/db.config.js';
+import { ErrorMiddleware } from './src/middlewares/error.middleware.js';
 
 // Routes Import
 import authRouter from './src/routes/auth.route.js';
@@ -21,6 +22,8 @@ app.use('/api/v1/auth/', authRouter);
 // DB Connection 
 connectDB();
 
+// Error Middleware
+app.use(ErrorMiddleware)
 // Listen Server
 app.listen(process.env.PORT, ()=>console.log(`Server listening at port 4000`));
 

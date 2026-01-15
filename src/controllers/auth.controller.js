@@ -1,10 +1,13 @@
 import { User } from '../models/user.model.js';
 import {asyncHandler} from '../utils/asyncHandler.util.js'
+import ErrorHanlder from '../utils/errorHandler.util.js';
 import { generateAccessToken, generateRefreshToken } from '../utils/genToken.util.js';
 import { sentToken} from '../utils/sentToken.util.js';
 
 // Register a user
-export const handleRegister = asyncHandler(async (req, res)=>{
+export const handleRegister = asyncHandler(async (req, res, next)=>{
+    const {name} = req.body;
+    if(!name)return next(new ErrorHanlder("user name is required", 400));
     // Create and save the user
     const user = await User.create({name, email, password});
     // Generate refresh token 
