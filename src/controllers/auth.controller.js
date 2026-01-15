@@ -6,8 +6,7 @@ import { sentToken} from '../utils/sentToken.util.js';
 
 // Register a user
 export const handleRegister = asyncHandler(async (req, res, next)=>{
-    const {name} = req.body;
-    if(!name)return next(new ErrorHanlder("user name is required", 400));
+  const {name, email, password} = req.body;
     // Create and save the user
     const user = await User.create({name, email, password});
     // Generate refresh token 
@@ -17,7 +16,7 @@ export const handleRegister = asyncHandler(async (req, res, next)=>{
     await user.save();
     const accessToken = generateAccessToken(user._id); // Generate access token
     sentToken('refreshToken', refreshToken, res); // sent refresh token in cookei
-    res.status(201).json({success: true, accessToken});
+    res.respond(201, "User registered successfully", {accessToken})
 });
 
 // Login the user
